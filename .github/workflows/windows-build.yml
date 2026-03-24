@@ -27,7 +27,7 @@ jobs:
         run: |
           & "$env:VCPKG_ROOT/vcpkg.exe" install zlib:x64-windows-static
           & "$env:VCPKG_ROOT/vcpkg.exe" install curl[core,sspi]:x64-windows-static
-          & "$env:VCPKG_ROOT/vcpkg.exe" install libzip[core,bzip2,zstd]:x64-windows-static
+          & "$env:VCPKG_ROOT/vcpkg.exe" install libzip[core]:x64-windows-static
 
       - name: Configure CMake
         run: >-
