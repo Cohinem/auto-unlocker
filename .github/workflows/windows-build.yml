@@ -6,6 +6,8 @@ on:
 jobs:
   build-windows:
     runs-on: windows-latest
+    env:
+      VCPKG_ROOT: ${{ github.workspace }}/vcpkg
 
     steps:
       - name: Checkout repository
@@ -14,14 +16,18 @@ jobs:
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v2
 
-      - name: Setup vcpkg
-        uses: lukka/run-vcpkg@v11
+      - name: Bootstrap vcpkg
+        shell: pwsh
+        run: |
+          git clone https://github.com/microsoft/vcpkg.git "$env:VCPKG_ROOT"
+          & "$env:VCPKG_ROOT/bootstrap-vcpkg.bat"
 
       - name: Install dependencies with vcpkg
+        shell: pwsh
         run: |
-          vcpkg install zlib:x64-windows-static
-          vcpkg install curl[core,sspi]:x64-windows-static
-          vcpkg install libzip[core,bzip2,lzma,zstd]:x64-windows-static
+          & "$env:VCPKG_ROOT/vcpkg.exe" install zlib:x64-windows-static
+          & "$env:VCPKG_ROOT/vcpkg.exe" install curl[core,sspi]:x64-windows-static
+          & "$env:VCPKG_ROOT/vcpkg.exe" install libzip[core,bzip2,lzma,zstd]:x64-windows-static
 
       - name: Configure CMake
         run: >-
